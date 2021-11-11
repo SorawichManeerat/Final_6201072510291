@@ -45,9 +45,9 @@ MIN_MATCH_COUNT = 10
 if len(good_match) > MIN_MATCH_COUNT :
     src_pts = np.float32([ ref_keypoing[m.queryIdx].pt for m in good_match ]).reshape(-1,1,2)
     dst_pts = np.float32([ search_keypoing[m.trainIdx].pt for m in good_match ]).reshape(-1,1,2)
-    
-    
-    
+
+
+
 while True :
     ret,frame = search_img.read()
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
