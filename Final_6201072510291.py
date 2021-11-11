@@ -12,14 +12,13 @@ ref_img = cv.imread("Templates/Template-4.png")
 ref_img = cv.cvtColor(ref_img,cv.COLOR_BGR2RGB)
 old_gray = cv.cvtColor(ref_img,cv.COLOR_RGB2GRAY)
 
-ref_keypoing, ref_des = sift.detectAndCompute(old_gray, None)
-
 search_img = cv.VideoCapture('Dataset-1/left_output-1.avi')
 
 success,img2 = search_img.read()
 imgOg = img2.copy()
 img2 = cv.cvtColor(img2,cv.COLOR_BGR2GRAY)
 
+ref_keypoing, ref_des = sift.detectAndCompute(old_gray, None)
 search_keypoing, search_des = sift.detectAndCompute(img2, None)
 
 
@@ -30,7 +29,6 @@ search_params = dict(check=50)
 flann = cv.FlannBasedMatcher(index_params,search_params)
 
 matches = flann.knnMatch(ref_des,search_des,k=2)
-
 matchMask = [[0,0] for i in range(len(matches))]
 
 good_match = list()
@@ -56,16 +54,15 @@ while True :
 
     p1, st, err = cv.calcOpticalFlowPyrLK(img2, frame_gray, dst_pts, None,**lk_params)
 
-    M, mask1 = cv.findHomography(src_pts, p1, cv.RANSAC,0.0001)
+    M, mask1 = cv.findHomography(src_pts, dst_pts, cv.RANSAC,0.0001)
     h,w = ref_img.shape[:2]
-
     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
     dst = cv.perspectiveTransform(pts,M)
 
     img = frame
-    cv.polylines(img,[np.int32(dst)],True,(0,0,255),3,cv.LINE_AA)
+    cv.polylines(img,[np.int32(dst)],True,(0,0,255),2,cv.LINE_AA)
 
-    cv.imshow('Crowd heatmapping with optical flow',img)
+    cv.imshow('Video frame',img)
     k = cv.waitKey(1) & 0xff
     if k == 27 :
         break
@@ -74,4 +71,4 @@ while True :
     dst_pts = p1.reshape(-1,1,2)
 
 cv.destroyAllWindows()
-cap.release
+search_img.release
