@@ -1,5 +1,5 @@
 import cv2 as cv
-import numpy as np 
+import numpy as np
 
 sift = cv.SIFT_create()
 
@@ -51,21 +51,20 @@ if len(good_match) > MIN_MATCH_COUNT :
 while True :
     ret,frame = search_img.read()
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    
 
 
-    p1, st, err = cv.calcOpticalFlowPyrLK(img2, frame_gray, dst_pts, None,**lk_params)   
-    
+
+    p1, st, err = cv.calcOpticalFlowPyrLK(img2, frame_gray, dst_pts, None,**lk_params)
 
     M, mask1 = cv.findHomography(src_pts, p1, cv.RANSAC,0.0004)
     h,w = ref_img.shape[:2]
-  
+
     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
     dst = cv.perspectiveTransform(pts,M)
-    
+
     img = frame
     cv.polylines(img,[np.int32(dst)],True,(195,9,15),3,cv.LINE_AA)
-  
+
     cv.imshow('Crowd heatmapping with optical flow',img)
     k = cv.waitKey(1) & 0xff
     if k == 27 :
@@ -73,7 +72,6 @@ while True :
 
     img2 = frame_gray.copy()
     dst_pts = p1.reshape(-1,1,2)
-       
 
 cv.destroyAllWindows()
 cap.release
