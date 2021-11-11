@@ -41,7 +41,7 @@ for m,n in matches :
         good_match_list.append([m])
 
 
-MIN_MATCH_COUNT = 10
+MIN_MATCH_COUNT = 12
 if len(good_match) > MIN_MATCH_COUNT :
     src_pts = np.float32([ ref_keypoing[m.queryIdx].pt for m in good_match ]).reshape(-1,1,2)
     dst_pts = np.float32([ search_keypoing[m.trainIdx].pt for m in good_match ]).reshape(-1,1,2)
@@ -56,14 +56,14 @@ while True :
 
     p1, st, err = cv.calcOpticalFlowPyrLK(img2, frame_gray, dst_pts, None,**lk_params)
 
-    M, mask1 = cv.findHomography(src_pts, p1, cv.RANSAC,0.0004)
+    M, mask1 = cv.findHomography(src_pts, p1, cv.RANSAC,0.0001)
     h,w = ref_img.shape[:2]
 
     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
     dst = cv.perspectiveTransform(pts,M)
 
     img = frame
-    cv.polylines(img,[np.int32(dst)],True,(195,9,15),3,cv.LINE_AA)
+    cv.polylines(img,[np.int32(dst)],True,(0,0,255),3,cv.LINE_AA)
 
     cv.imshow('Crowd heatmapping with optical flow',img)
     k = cv.waitKey(1) & 0xff
