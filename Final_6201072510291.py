@@ -49,7 +49,7 @@ if len(good_match) > MIN_MATCH_COUNT :
 
 
 while True :
-    dist,frame = search_img.read()
+    ret,frame = search_img.read()
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
 
